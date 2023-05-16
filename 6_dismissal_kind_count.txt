@@ -1,5 +1,0 @@
-SELECT DISTINCT dismissal_kind, 
-	COUNT(dismissal_kind) 
-FROM ipl_balls 
-GROUP BY dismissal_kind 
-HAVING dismissal_kind !='NA'
