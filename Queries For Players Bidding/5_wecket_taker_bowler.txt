@@ -1,0 +1,15 @@
+SELECT DISTINCT ib.bowler, 
+		COUNT(ib.bowler) AS balls, 
+		b.wickets,
+		ROUND(COUNT(ib.bowler)*1.0/b.wickets,2)AS strike_rate
+FROM ipl_balls AS ib
+LEFT JOIN(SELECT bowler,
+		  		COUNT(bowler) AS wickets
+		  FROM ipl_balls 
+		  WHERE is_wicket='true' AND dismissal_kind != 'run out'
+		  GROUP BY bowler) AS b
+ON ib.bowler=b.bowler
+GROUP BY DISTINCT ib.bowler , b.wickets
+HAVING COUNT(ib.bowler)>500 
+ORDER BY strike_rate
+LIMIT 10

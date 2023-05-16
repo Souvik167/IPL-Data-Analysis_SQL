@@ -1,0 +1,25 @@
+
+SELECT tr.batsman,
+	   tr.run,
+	   o.match AS Total_out,
+	   round(((tr.run*1.0)/o.match),2) AS Average, 
+	   s.season AS "Season Played"
+FROM (SELECT batsman,
+			 SUM(batsman_runs) AS Run 
+	  FROM ipl_balls GROUP BY batsman) as tr 
+INNER JOIN(SELECT DISTINCT player_dismissed,
+		   		  COUNT(DISTINCT id) AS match 
+		   FROM ipl_balls
+		   WHERE player_dismissed != 'NA'
+		   GROUP BY player_dismissed) AS o 
+ON tr.batsman=o.player_dismissed
+INNER JOIN (SELECT ib.batsman,
+					COUNT(DISTINCT DATE_PART('year', im.date)) AS Season
+			FROM ipl_balls AS ib 
+			JOIN ipl_matches AS im
+			ON ib.id=im.id
+			GROUP BY batsman) AS s
+ON tr.batsman=s.batsman 
+WHERE s.season>2 AND tr.run>500 
+ORDER BY Average DESC
+LIMIT 10
