@@ -1,8 +1,0 @@
-SELECT batsman,
-			COUNT(batsman) AS "bowl_faced",
-			SUM(batsman_runs) AS "total_run_scored",
-			ROUND(((SUM(batsman_runs)*1.0)/COUNT(batsman))*100,2) AS "strike_rate"
-	FROM ipl_balls GROUP BY batsman 
-	HAVING COUNT(batsman)>500
-	ORDER BY "strike_rate" DESC
-	LIMIT 10;
