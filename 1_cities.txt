@@ -1,2 +1,0 @@
-
-select distinct city from ipl_matches
