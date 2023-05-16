@@ -1,5 +1,0 @@
-SELECT DISTINCT ball_result,
-	COUNT(ball_result) AS boundaries_total 
-FROM deliveries_v02
-GROUP BY ball_result 
-HAVING ball_result!='other'
