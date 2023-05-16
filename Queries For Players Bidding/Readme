@@ -1,1 +1,14 @@
-SQL queries to analyze and get the data of best batsman,bowler, all rounder and wecket keeper.
+1. Quiries to get Top 10 player players with high S.R who have faced at least 500 balls.
+
+2. Quiries to get Top 10 players with good Average who have played more the 2 ipl seasons.
+
+3. Queries to get Top 10 Hard-hitting players who have scored most runs in boundaries and have played more the 2 ipl season. 
+
+4. Queries to get Top 10  with good economy who have bowled at least 500 balls in IPL so far.
+
+5. Queries to get Top 10 bowlers with the best strike rate and who have bowled at least 500 balls in IPL so far.
+
+6. Queries to get Top 10 All_rounders with the best batting as well as bowling strike rate and who have faced at least 500 balls in IPL so far and have bowled minimum 300 balls.
+
+7. Queries to get Top 10 wicketkeeper
+
