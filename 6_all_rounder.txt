@@ -1,0 +1,68 @@
+
+SELECT * FROM 
+  (SELECT bl.bowler,
+     bl.balls,
+     bl.strike_rate AS bowling_strike_rate,
+     bt.bowl_faced,
+     bt.strike_rate AS batting_strike_rate,
+     ROW_NUMBER() OVER(ORDER BY bt.strike_rate DESC) AS batting_rank,
+     ROW_NUMBER() OVER(ORDER BY bl.strike_rate ASC) AS bowling_rank,
+     round(1.0*(ROW_NUMBER() OVER(ORDER BY bt.strike_rate DESC)
+                           +
+                ROW_NUMBER() OVER(ORDER BY bl.strike_rate ASC))/2,2)as avg_rank
+  FROM wicket_taker AS bl
+  JOIN(SELECT batsman,strike_rate, bowl_faced 
+              FROM strike_rate 
+             WHERE bowl_faced>500) as bt
+  ON bt.batsman=bl.bowler
+  where bl.balls>300
+ ) AS a
+ ORDER BY avg_rank
+ LIMIT 10
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Table  'wicket_taker' and 'strike_rate' was created while retriving high strike rate batsman and wicket taker bowler/bowler strike rate data. 
+As I was instructed not to include create command option, I have kept this as it is. Though I am adding another query below to retrive the table independently from ' ipl_balls' data
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+*/
+
+WITH strike_rate AS (
+	SELECT batsman,
+			COUNT(batsman) AS bowl_faced,
+			SUM(batsman_runs) AS "total_run_scored",
+			ROUND(((SUM(batsman_runs)*1.0)/COUNT(batsman))*100,2) AS "strike_rate"
+	FROM ipl_balls GROUP BY batsman HAVING COUNT(batsman)>500),
+	
+wicket_taker AS (
+			SELECT DISTINCT ib.bowler, 
+				   COUNT(ib.bowler) AS balls, 
+		           b.wickets,
+		           ROUND(COUNT(ib.bowler)*1.0/b.wickets,2)AS strike_rate
+            FROM ipl_balls AS ib 
+			
+LEFT JOIN(SELECT bowler, COUNT(bowler) AS wickets
+		  FROM ipl_balls 
+		  WHERE is_wicket='true' AND dismissal_kind != 'run out'
+		  GROUP BY bowler) AS b
+ON ib.bowler=b.bowler
+GROUP BY DISTINCT ib.bowler , b.wickets 
+HAVING COUNT(ib.bowler)>300)
+	
+SELECT * FROM 
+  (SELECT bl.bowler,
+     bl.balls,
+     bl.strike_rate AS bowling_strike_rate,
+     bt.bowl_faced,
+     bt.strike_rate AS batting_strike_rate,
+     ROW_NUMBER() OVER(ORDER BY bt.strike_rate DESC) AS batting_rank,
+     ROW_NUMBER() OVER(ORDER BY bl.strike_rate ASC) AS bowling_rank,
+     round(1.0*(ROW_NUMBER() OVER(ORDER BY bt.strike_rate DESC)
+                           +
+                ROW_NUMBER() OVER(ORDER BY bl.strike_rate ASC))/2,2)as avg_rank
+  FROM wicket_taker AS bl
+  JOIN strike_rate as bt
+  ON bt.batsman=bl.bowler
+  WHERE bl.balls>300) AS a
+ORDER BY avg_rank
+LIMIT 10

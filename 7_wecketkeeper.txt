@@ -1,0 +1,20 @@
+SELECT s.fielder,
+	tr.average,
+	COUNT(s.fielder) AS stumped_count, 
+	c.caught_count
+FROM ipl_balls AS s 
+LEFT JOIN(SELECT fielder, COUNT(fielder) AS caught_count
+		  FROM ipl_balls 
+		  WHERE dismissal_kind='caught' 
+		  GROUP BY fielder) AS c 
+ON s.fielder=c.fielder
+JOIN (SELECT * FROM good_avg WHERE run>500)AS tr 
+ON s.fielder=tr.batsman
+JOIN(select distinct batsman, count(distinct id) as match from ipl_balls
+		group by batsman order by match desc) as m		
+ON s.fielder=m.batsman
+WHERE dismissal_kind='stumped' 
+GROUP BY s.fielder,c.caught_count,tr.run,tr.average
+ORDER BY tr.average DESC,stumped_count DESC
+LIMIT 10
+
