@@ -1,5 +1,0 @@
-CREATE TABLE deliveries_v03 AS
-SELECT a.*,b.city,b.date
-FROM deliveries_v02 AS a
-JOIN ipl_matches AS b
-ON a.id=b.id
