@@ -1,6 +1,0 @@
-SELECT DISTINCT bowler,
-		sum(extra_runs) AS extra_run_tot 
-FROM ipl_balls 
-GROUP BY bowler 
-ORDER BY extra_run_tot DESC
-LIMIT 5;
