@@ -1,0 +1,9 @@
+SELECT im.venue,
+		EXTRACT(year from im.date) as Year,
+		SUM(ib.total_runs) AS total_run
+FROM ipl_matches AS im
+JOIN ipl_balls AS ib
+ON im.id=ib.id
+GROUP BY im.venue,Year
+HAVING im.venue='Eden Gardens'
+ORDER BY total_run DESC
