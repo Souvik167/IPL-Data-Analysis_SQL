@@ -1,6 +1,0 @@
-SELECT DISTINCT bowling_team,
-	   COUNT(ball_result) AS dot_bowl
-FROM deliveries_v02 
-GROUP BY bowling_team,ball_result
-HAVING ball_result='dot' 
-ORDER BY dot_bowl desc
